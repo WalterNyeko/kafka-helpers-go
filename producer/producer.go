@@ -3,8 +3,8 @@ package producer
 import (
 	"context"
 	"fmt"
+	. "github.com/WalterNyeko/kafka-helpers-go/models"
 	"github.com/segmentio/kafka-go"
-	. "kafka-helpers-go/models"
 	"log"
 	"os"
 	"strconv"

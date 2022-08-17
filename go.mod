@@ -1,4 +1,4 @@
-module kafka-helpers-go
+module github.com/WalterNyeko/kafka-helpers-go
 
 go 1.19
 
