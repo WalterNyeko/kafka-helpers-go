@@ -19,7 +19,7 @@ const (
 	failedToCloseWriter = "Failed to close writer:"
 )
 
-func PublishToTopic(message interface{}, topic string) ServiceMessage {
+func PublishToTopic(message string, topic string) ServiceMessage {
 
 	writeTimeout, _ := os.LookupEnv("KAFKA_WRITE_TIMEOUT")
 	address, _ := os.LookupEnv("KAFKA_ADDRESS")
@@ -36,7 +36,7 @@ func PublishToTopic(message interface{}, topic string) ServiceMessage {
 	writeTimeoutValue, _ := strconv.Atoi(writeTimeout)
 	conn.SetWriteDeadline(time.Now().Add(time.Duration(writeTimeoutValue)*time.Second))
 
-	_, err = conn.WriteMessages(kafka.Message{Value: message.([]byte)})
+	_, err = conn.WriteMessages(kafka.Message{Value: []byte(message)})
 	if err != nil {
 		log.Println(failedToWrite, err)
 		return errorMessage(err, failedToWrite)
