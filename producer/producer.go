@@ -2,8 +2,8 @@ package producer
 
 import (
 	"context"
-	"fmt"
 	. "github.com/WalterNyeko/kafka-helpers-go/models"
+	. "github.com/WalterNyeko/kafka-helpers-go/utils"
 	"github.com/segmentio/kafka-go"
 	"log"
 	"os"
@@ -12,8 +12,6 @@ import (
 )
 
 const (
-	internalServerError = 500
-	responseCode = "5000"
 	failedToConnect = "Failed to dial leader:"
 	failedToWrite = "Failed to write message:"
 	failedToCloseWriter = "Failed to close writer:"
@@ -30,7 +28,7 @@ func PublishToTopic(message string, topic string) ServiceMessage {
 	conn, err := kafka.DialLeader(context.Background(), network, address, topic, partitionValue)
 	if err != nil {
 		log.Println(failedToConnect, err)
-		return errorMessage(err, failedToConnect)
+		return ErrorMessage(err, failedToConnect)
 	}
 
 	writeTimeoutValue, _ := strconv.Atoi(writeTimeout)
@@ -39,21 +37,14 @@ func PublishToTopic(message string, topic string) ServiceMessage {
 	_, err = conn.WriteMessages(kafka.Message{Value: []byte(message)})
 	if err != nil {
 		log.Println(failedToWrite, err)
-		return errorMessage(err, failedToWrite)
+		return ErrorMessage(err, failedToWrite)
 	}
 
 	if err := conn.Close(); err != nil {
 		log.Println(failedToCloseWriter, err)
-		return errorMessage(err, failedToCloseWriter)
+		return ErrorMessage(err, failedToCloseWriter)
 	}
 	return ServiceMessage{}
 }
 
-func errorMessage(err error, message string) ServiceMessage {
-	return ServiceMessage{
-		StatusMessage:  fmt.Sprintf(message + " %s", err.Error()),
-		StatusCode:     internalServerError,
-		ResponseCode:   responseCode,
-		SupportMessage: err.Error(),
-	}
-}
+
