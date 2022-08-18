@@ -10,9 +10,6 @@ import (
 )
 
 const (
-	failedToConnect = "Failed to dial leader:"
-	failedToCloseBatchReader = "Failed to close batch reader:"
-	failedToCloseWriter = "Failed to close writer:"
 	groupId = "G1"
 )
 
